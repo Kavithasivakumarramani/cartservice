@@ -1,0 +1,63 @@
+pipeline {
+    agent any
+    environment {
+        AWS_REGION = 'us-east-1' // Replace with your AWS region
+        ECR_REPO_NAME = 'cartservice' // Replace with your ECR repository name
+        ECR_REGISTRY = "183631308419.dkr.ecr.${AWS_REGION}.amazonaws.com" // Replace with your AWS Account ID
+        IMAGE_TAG = "${ECR_REGISTRY}/${ECR_REPO_NAME}:${env.BUILD_ID}"
+        KUBE_CONFIG_CREDENTIALS_ID = 'kubeconfig-credentials' // Jenkins credentials ID for kubeconfig
+        AWS_CREDENTIALS_ID = 'aws-credentials' // Jenkins credentials ID for AWS
+    }
+    stages {
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main', url: 'https://github.com/Kavithasivakumarramani/cartservice.git'// Replace with your repository URL
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    dockerImage = docker.build("${IMAGE_TAG}")
+                }
+            }
+        }
+        stage('Login to AWS ECR') {
+            steps {
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: "${AWS_CREDENTIALS_ID}"]]) {
+                    sh """aws ecr get-login-password --region ${AWS_REGION} | docker login --username AWS --password-stdin ${ECR_REGISTRY}"""
+                }
+            }
+        }
+        stage('Push Docker Image to ECR') {
+            steps {
+                script {
+                    docker.withRegistry("https://${ECR_REGISTRY}", '') {
+                        dockerImage.push()
+                    }
+                }
+            }
+        }
+        stage('Deploy to Kubernetes') {
+            steps {
+
+                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding', credentialsId: "${AWS_CREDENTIALS_ID}"]]) {
+                    sh '''
+                    
+                    aws eks update-kubeconfig --name cluster --region us-east-1
+                
+                    kubectl set image deployment/cartservice cartservice=${IMAGE_TAG} -n jenkins --record
+
+                    '''
+                }
+                
+
+                
+            }
+        }
+    }
+    post {
+        cleanup {
+            sh 'docker rmi ${IMAGE_TAG}'
+        }
+    }
+}
