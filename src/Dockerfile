@@ -21,8 +21,10 @@ WORKDIR /app
 COPY src/cartservice.csproj .
 RUN dotnet restore cartservice.csproj -r linux-musl-x64
 
-# Copy all files and publish the app
+# Copy the source files excluding test files (based on .dockerignore)
 COPY . .
+
+# Publish the app
 RUN dotnet publish cartservice.csproj \
     -p:PublishSingleFile=true \
     -r linux-musl-x64 \
