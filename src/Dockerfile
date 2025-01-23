@@ -1,7 +1,7 @@
 # Use a base image with the necessary SDK
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
-EXPOSE 7070  # Changed from 80 to 7070 to match the original repo
+EXPOSE 7070 
 
 # Use the SDK image for building the app
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
