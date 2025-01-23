@@ -16,14 +16,17 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0.100-rc.1@sha256:c3d084185dee85aa204797dd228e3e720a14dbcfe4e785b40b9df189f79c7190 AS builder
 WORKDIR /app
 
-# Copy the csproj file from the correct path
+# Copy the csproj file
 COPY src/cartservice.csproj .
 
 # Restore dependencies
 RUN dotnet restore cartservice.csproj \
     -r linux-musl-x64
 
-# Copy the rest of the files
+# Copy the Protobuf files
+COPY src/protos/ ./protos/
+
+# Copy the rest of the application files
 COPY . .
 
 # Build the application
