@@ -1,7 +1,7 @@
 # Use a base image with the necessary SDK
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
-EXPOSE 7070  # Expose port 7070
+EXPOSE 7070  
 
 # Use the SDK image for building the app
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
