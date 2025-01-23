@@ -4,4 +4,5 @@
 **/obj/
 **/out/
 **/tests
+**/test
 Dockerfile*
