@@ -8,7 +8,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 # Copy only the necessary project files
-COPY ["cartservice/cartservice.csproj", "cartservice/"]
+COPY ["src/cartservice.csproj", "cartservice/"]
 RUN dotnet restore "cartservice/cartservice.csproj" -r linux-musl-x64
 
 # Copy the remaining files
