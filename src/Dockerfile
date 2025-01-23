@@ -12,24 +12,17 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# Build Stage
 # https://mcr.microsoft.com/product/dotnet/sdk
-FROM mcr.microsoft.com/dotnet/sdk:8.0.100-rc.1@sha256:c3d084185dee85aa204797dd228e3e720a14dbcfe4e785b40b9df189f79c7190 AS builder
+FROM mcr.microsoft.com/dotnet/sdk:8.0.100-rc.1@sha256:c3d084185dee85aa204797dd228e3e720a14dbcfe4e785b40b9df189f79c7190 as builder
 WORKDIR /app
 
-# Copy the csproj file
+# Copy the .csproj file and restore dependencies
 COPY src/cartservice.csproj .
+RUN dotnet restore cartservice.csproj -r linux-musl-x64
 
-# Restore dependencies
-RUN dotnet restore cartservice.csproj \
-    -r linux-musl-x64
-
-# Copy the Protobuf files
-COPY src/protos/ ./protos/
-
-# Copy the rest of the application files
+# Copy all files and publish the app
 COPY . .
-
-# Build the application
 RUN dotnet publish cartservice.csproj \
     -p:PublishSingleFile=true \
     -r linux-musl-x64 \
@@ -40,22 +33,14 @@ RUN dotnet publish cartservice.csproj \
     -o /cartservice \
     --no-restore
 
+# Runtime Stage
 # https://mcr.microsoft.com/product/dotnet/runtime-deps
 FROM mcr.microsoft.com/dotnet/runtime-deps:8.0.0-rc.1-alpine3.18-amd64@sha256:417dd8282260a8229cbe36521ef61a63c16a689141f517419b48d8f8b2f2e684
 
 WORKDIR /app
-
-# Copy the output from the builder stage
 COPY --from=builder /cartservice .
-
 EXPOSE 7070
-
-# Set environment variables
 ENV DOTNET_EnableDiagnostics=0 \
     ASPNETCORE_HTTP_PORTS=7070
-
-# Run as a non-root user
 USER 1000
-
-# Set the entry point
 ENTRYPOINT ["/app/cartservice"]
