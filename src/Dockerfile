@@ -14,14 +14,14 @@ COPY ["src/cartservice.csproj", "src/cartservice/"]
 COPY ["src/protos", "src/protos"]
 
 # Restore the project dependencies
-RUN dotnet restore "src/cartservice/cartservice.csproj" -r linux-musl-x64
+RUN dotnet restore "src/cartservice.csproj" -r linux-musl-x64
 
 # Copy the remaining source files
 COPY . ./
 
 # Publish the application
 WORKDIR "/src/cartservice"
-RUN dotnet publish "src/cartservice/cartservice.csproj" -p:PublishSingleFile=true -r linux-musl-x64 --self-contained true -p:PublishTrimmed=True -p:TrimMode=Full -c release -o /cartservice --no-restore
+RUN dotnet publish "src/cartservice.csproj" -p:PublishSingleFile=true -r linux-musl-x64 --self-contained true -p:PublishTrimmed=True -p:TrimMode=Full -c release -o /cartservice --no-restore
 
 # Final image stage
 FROM base AS final
