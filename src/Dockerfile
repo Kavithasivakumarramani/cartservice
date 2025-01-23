@@ -8,7 +8,7 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 
 # Copy the necessary project files
-COPY ["src/cartservice/cartservice.csproj", "src/cartservice/"]
+COPY ["src/cartservice.csproj", "src/cartservice/"]
 
 # Copy the protos folder (make sure the path is correct)
 COPY ["src/protos", "src/protos"]
