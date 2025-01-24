@@ -19,7 +19,7 @@ pipeline {
                 script {
                     sh 'pwd'
                     sh 'ls -la'
-                    sh 'docker build -f src/Dockerfile -t ${IMAGE_TAG} .'
+                    sh 'docker build -f Dockerfile -t ${IMAGE_TAG} .'
                 }
             }
         }
