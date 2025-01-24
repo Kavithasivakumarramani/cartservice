@@ -16,7 +16,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS builder 
 WORKDIR /app
 COPY . .
-RUN dotnet restore src/cartservice.csproj -r linux-musl-x64
+RUN dotnet restore cartservice.csproj -r linux-musl-x64
 RUN dotnet restore tests/cartservice.tests.csproj
 
 
