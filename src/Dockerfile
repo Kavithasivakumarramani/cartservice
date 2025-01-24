@@ -23,7 +23,7 @@ COPY . .
 # Build and run tests
 RUN dotnet test tests/cartservice.tests.csproj --no-restore
 
-RUN dotnet publish src/cartservice.csproj \
+RUN dotnet publish cartservice.csproj \
     -p:PublishSingleFile=true \
     -r linux-musl-x64 \
     --self-contained true \
