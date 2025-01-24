@@ -15,7 +15,7 @@
 
   <ItemGroup>
     <!-- Ensure correct path to the proto file for Docker build context -->
-    <Protobuf Include="protos/Cart.proto" GrpcServices="Both" />
+    <Protobuf Include="src/protos/Cart.proto" GrpcServices="Both" />
   </ItemGroup>
 
 </Project>
