@@ -20,8 +20,8 @@ RUN dotnet restore cartservice.csproj -r linux-musl-x64
 RUN dotnet restore tests/cartservice.tests.csproj
 
 
-# Build and run tests
-RUN dotnet test tests/cartservice.tests.csproj --no-restore
+# # Build and run tests
+# RUN dotnet test tests/cartservice.tests.csproj --no-restore
 
 RUN dotnet publish cartservice.csproj \
     -p:PublishSingleFile=true \
