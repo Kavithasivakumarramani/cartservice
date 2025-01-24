@@ -17,6 +17,8 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
+                    sh 'sudo pwd'
+                    sh 'sudo ls -la'
                     sh 'docker build -f src/Dockerfile -t ${IMAGE_TAG} .'
                 }
             }
