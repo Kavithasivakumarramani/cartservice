@@ -15,11 +15,10 @@
 # https://mcr.microsoft.com/product/dotnet/sdk
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS builder 
 WORKDIR /app
-COPY src/cartservice.csproj .
-RUN dotnet restore cartservice.csproj \
-    -r linux-musl-x64
-RUN dotnet restore tests/cartservice.tests.csproj
 COPY . .
+RUN dotnet restore src/cartservice.csproj -r linux-musl-x64
+RUN dotnet restore tests/cartservice.tests.csproj
+
 
 # Build and run tests
 RUN dotnet test tests/cartservice.tests.csproj --no-restore
